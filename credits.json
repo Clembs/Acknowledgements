@@ -1,0 +1,32 @@
+[
+  {
+    "name": "undici",
+    "url": "https://github.com/nodejs/undici",
+    "license": "MIT"
+  },
+  {
+    "name": "yargs",
+    "url": "https://github.com/yargs/yargs",
+    "license": "MIT"
+  },
+  {
+    "name": "@types/node",
+    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+    "license": "MIT"
+  },
+  {
+    "name": "@types/yargs",
+    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+    "license": "MIT"
+  },
+  {
+    "name": "esbuild",
+    "url": "https://github.com/evanw/esbuild",
+    "license": "MIT"
+  },
+  {
+    "name": "typescript",
+    "url": "https://github.com/Microsoft/TypeScript",
+    "license": "Apache-2.0"
+  }
+]
