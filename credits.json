@@ -1,32 +1,44 @@
 [
   {
-    "name": "undici",
-    "url": "https://github.com/nodejs/undici",
-    "license": "MIT"
-  },
-  {
-    "name": "yargs",
-    "url": "https://github.com/yargs/yargs",
-    "license": "MIT"
-  },
-  {
     "name": "@types/node",
-    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-    "license": "MIT"
+    "version": "18.6.5",
+    "license": "MIT",
+    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
   {
     "name": "@types/yargs",
-    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-    "license": "MIT"
+    "version": "17.0.11",
+    "license": "MIT",
+    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
   {
     "name": "esbuild",
-    "url": "https://github.com/evanw/esbuild",
-    "license": "MIT"
+    "version": "0.14.54",
+    "license": "MIT",
+    "url": "https://github.com/evanw/esbuild"
+  },
+  {
+    "name": "prettier",
+    "version": "2.7.1",
+    "license": "MIT",
+    "url": "prettier/prettier"
+  },
+  {
+    "name": "prettier-plugin-organize-imports",
+    "version": "3.0.3",
+    "license": "MIT",
+    "url": "simonhaenisch/prettier-plugin-organize-imports"
   },
   {
     "name": "typescript",
-    "url": "https://github.com/Microsoft/TypeScript",
-    "license": "Apache-2.0"
+    "version": "4.7.4",
+    "license": "Apache-2.0",
+    "url": "https://github.com/Microsoft/TypeScript"
+  },
+  {
+    "name": "yargs",
+    "version": "17.5.1",
+    "license": "MIT",
+    "url": "https://github.com/yargs/yargs"
   }
 ]

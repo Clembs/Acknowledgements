@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import generateToJSON from './formats/json';
+import { generate } from './commands/generate';
 
 const cli = yargs(hideBin(process.argv)).scriptName('ack');
 
@@ -23,18 +23,17 @@ cli.command(
         describe: 'Generate a pretty Markdown file.',
         boolean: true,
         alias: 'md',
-      })
-      .option('force', {
-        describe: 'Overwrite existing credits.json file.',
-        boolean: true,
-        alias: 'f',
       });
   },
   (argv) => {
-    generateToJSON(argv.dir, argv.markdown, argv.includeDev, argv.force);
+    generate(argv.dir, argv.markdown, argv.includeDev);
   }
 );
 
 cli.command('add', 'Adds a new credit to the credits.json file.');
+
+cli.alias({
+  v: 'version',
+});
 
 cli.demandCommand().strictCommands().strictOptions().strict(true).parse();

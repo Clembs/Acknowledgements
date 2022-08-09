@@ -46,10 +46,11 @@ npx ack --include-dev # or -D
 - [ ] Have an actual README
 - [ ] Command to manually add new stuff to credit
 - [ ] Option to ignore @types/ devDependencies in credits
-- [ ] Templating for the header
+- [ ] Customize Markdown header
 - [ ] Node API
 - [ ] Support monorepo merging to one file
 - [ ] Support CSV output, MD only, etc...
 - [ ] Support multiple files
 - [ ] Progress bars in the console
 - [ ] Support for non-Node projects
+- [ ] Recursively find dependencies' dependencies

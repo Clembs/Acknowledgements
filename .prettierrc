@@ -1,0 +1,10 @@
+{
+  "plugins": [
+    "./node_modules/prettier-plugin-organize-imports"
+  ],
+  "arrowParens": "always",
+  "singleQuote": true,
+  "printWidth": 100,
+  "tabWidth": 2,
+  "trailingComma": "es5"
+}
