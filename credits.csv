@@ -1,0 +1,10 @@
+Name,License,URL,Version
+@types/node,MIT,https://github.com/DefinitelyTyped/DefinitelyTyped,18.6.5
+@types/prompts,MIT,https://github.com/DefinitelyTyped/DefinitelyTyped,2.0.14
+@types/yargs,MIT,https://github.com/DefinitelyTyped/DefinitelyTyped,17.0.11
+esbuild,MIT,https://github.com/evanw/esbuild,0.14.54
+prettier,MIT,prettier/prettier,2.7.1
+prettier-plugin-organize-imports,MIT,simonhaenisch/prettier-plugin-organize-imports,3.0.3
+prompts,MIT,terkelg/prompts,2.4.2
+typescript,Apache-2.0,https://github.com/Microsoft/TypeScript,4.7.4
+yargs,MIT,https://github.com/yargs/yargs,17.5.1

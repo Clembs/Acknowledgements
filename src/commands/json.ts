@@ -1,17 +1,9 @@
 import { write } from '../helpers';
-import { CreditsMap } from '../types';
+import { CreditJSON } from '../types';
 
-function writeCreditsJSON(filePath: string, credits: CreditsMap) {
-  const creditsArray = Array.from(credits.values());
+function writeCreditsJSON(filePath: string, credits: CreditJSON[]) {
   try {
-    write(
-      filePath,
-      JSON.stringify(
-        creditsArray.sort((a, b) => a.name.localeCompare(b.name)),
-        null,
-        2
-      )
-    );
+    write(filePath, JSON.stringify(credits, null, 2));
   } catch (e) {
     throw new Error(String(e));
   }

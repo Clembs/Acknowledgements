@@ -1,16 +1,43 @@
 import { resolve } from 'path';
-import { read } from '../helpers';
-import { CreditsMap } from '../types';
+import { color, read } from '../helpers';
+import { CreditJSON, CreditsMap, CreditTypes } from '../types';
+import writeCreditsCSV from './csv';
+import writeCreditsHTML from './html';
 import writeCreditsJSON from './json';
 import writeCreditsMD from './markdown';
+import writeCreditsTOML from './toml';
+import writeCreditsYAML from './yaml';
 
 const depNames = new Set<string>();
 const allDeps: CreditsMap = new Map();
 
+const writeFormat = {
+  json: writeCreditsJSON,
+  md: writeCreditsMD,
+  yml: writeCreditsYAML,
+  toml: writeCreditsTOML,
+  html: writeCreditsHTML,
+  csv: writeCreditsCSV,
+};
+
 export async function generate(
   directory: string,
-  includeMd: boolean = false,
-  includeDevDeps: boolean = false
+  formats: {
+    json?: true;
+    md?: boolean;
+    yml?: boolean;
+    toml?: boolean;
+    html?: boolean;
+    csv?: boolean;
+  },
+  include: {
+    devDeps?: boolean;
+    types?: boolean;
+  } = {
+    devDeps: false,
+    types: false,
+  },
+  recursive: boolean = false
 ) {
   const time = Date.now();
 
@@ -19,27 +46,39 @@ export async function generate(
 
   console.log('🔎 Retrieving dependencies...');
 
+  const credits: CreditJSON[] = JSON.parse(read(creditsJSONpath)) ?? [];
   const pjson = JSON.parse(read(packageJSONpath));
+
+  credits.forEach((credit) => {
+    if (credit && credit.type === CreditTypes.ManualCredit) {
+      allDeps.set(credit.name, credit);
+    }
+  });
 
   if (!pjson.dependencies) {
     throw new Error('No dependencies found.');
   }
   [
     ...Object.keys(pjson.dependencies ?? {}),
-    ...(includeDevDeps ? Object.keys(pjson.devDependencies ?? {}) : []),
-  ].forEach((d) => addDependency(d, directory));
+    ...(include.devDeps ? Object.keys(pjson.devDependencies ?? {}) : []),
+  ]
+    .filter(Boolean)
+    .forEach((d) => addDependency(d, directory, recursive));
 
-  writeCreditsJSON(creditsJSONpath, allDeps);
-  console.log(`✅ Wrote to ${creditsJSONpath}`);
+  Object.keys(formats).forEach((f) => {
+    const format = f as keyof typeof formats;
+    if (!formats[format]) return;
 
-  if (includeMd) {
-    const mdPath = resolve(`${directory}/CREDITS.md`);
-    writeCreditsMD(mdPath, allDeps);
+    const path = resolve(`${directory}/credits.${format}`);
 
-    console.log(`✅ Wrote Markdown to ${mdPath}`);
-  }
+    const allCredits = Array.from(allDeps.values()).sort((a, b) => a.name.localeCompare(b.name));
 
-  console.log(`✨ Done in ${Date.now() - time}ms`);
+    writeFormat[format](path, allCredits);
+
+    console.log(`📝 Wrote ${color('bold', 'underline')} to ${path}.`, `credits.${format}`);
+  });
+
+  console.log(`✨ Credited ${allDeps.size} dependencies in ${Date.now() - time}ms.`);
 }
 
 /**
@@ -47,7 +86,7 @@ export async function generate(
  * @param dep The dependency to check
  * @returns The name and url of the dependency
  */
-function addDependency(dep: string, directory: string): void {
+function addDependency(dep: string, directory: string, recursive: boolean = false): void {
   if (depNames.has(dep)) {
     return;
   }
@@ -74,5 +113,12 @@ function addDependency(dep: string, directory: string): void {
     version,
     license: pjson.license || 'Unknown',
     url,
+    type: CreditTypes.Dependency,
   });
+
+  depNames.add(dep);
+
+  if (recursive && pjson.dependencies) {
+    Object.keys(pjson.dependencies ?? {}).forEach((d) => addDependency(d, directory, true));
+  }
 }

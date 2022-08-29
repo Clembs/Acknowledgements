@@ -3,42 +3,63 @@
     "name": "@types/node",
     "version": "18.6.5",
     "license": "MIT",
-    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped"
+    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "type": "DEPENDENCY"
+  },
+  {
+    "name": "@types/prompts",
+    "version": "2.0.14",
+    "license": "MIT",
+    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "type": "DEPENDENCY"
   },
   {
     "name": "@types/yargs",
     "version": "17.0.11",
     "license": "MIT",
-    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped"
+    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "type": "DEPENDENCY"
   },
   {
     "name": "esbuild",
     "version": "0.14.54",
     "license": "MIT",
-    "url": "https://github.com/evanw/esbuild"
+    "url": "https://github.com/evanw/esbuild",
+    "type": "DEPENDENCY"
   },
   {
     "name": "prettier",
     "version": "2.7.1",
     "license": "MIT",
-    "url": "prettier/prettier"
+    "url": "prettier/prettier",
+    "type": "DEPENDENCY"
   },
   {
     "name": "prettier-plugin-organize-imports",
     "version": "3.0.3",
     "license": "MIT",
-    "url": "simonhaenisch/prettier-plugin-organize-imports"
+    "url": "simonhaenisch/prettier-plugin-organize-imports",
+    "type": "DEPENDENCY"
+  },
+  {
+    "name": "prompts",
+    "version": "2.4.2",
+    "license": "MIT",
+    "url": "terkelg/prompts",
+    "type": "DEPENDENCY"
   },
   {
     "name": "typescript",
     "version": "4.7.4",
     "license": "Apache-2.0",
-    "url": "https://github.com/Microsoft/TypeScript"
+    "url": "https://github.com/Microsoft/TypeScript",
+    "type": "DEPENDENCY"
   },
   {
     "name": "yargs",
     "version": "17.5.1",
     "license": "MIT",
-    "url": "https://github.com/yargs/yargs"
+    "url": "https://github.com/yargs/yargs",
+    "type": "DEPENDENCY"
   }
 ]

@@ -1,8 +1,7 @@
 {
   "name": "acknowledgements",
   "description": "✨ Properly credit deps and assets in your projects in a pretty way.",
-  "version": "1.1.0",
-  "type": "module",
+  "version": "1.2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Clembs/acknowledgements.git"
@@ -20,15 +19,17 @@
   "scripts": {
     "ack": "node dist/index.js",
     "start": "yarn build && yarn credit",
-    "build": "esbuild --outfile=dist/index.js --target=es2022 --format=esm --platform=node --bundle src/index.ts --external:cli-progress",
-    "credit": "yarn ack --include-dev --markdown",
+    "build": "esbuild --outfile=dist/index.js --target=es2022 --format=cjs --platform=node --bundle src/index.ts",
+    "credit": "yarn ack --include-dev --formats=md csv html toml yml",
     "postinstall": "yarn credit"
   },
   "dependencies": {
+    "prompts": "^2.4.2",
     "yargs": "^17.5.1"
   },
   "devDependencies": {
     "@types/node": "^18.6.5",
+    "@types/prompts": "^2.0.14",
     "@types/yargs": "^17.0.11",
     "esbuild": "^0.14.54",
     "prettier": "^2.7.1",
