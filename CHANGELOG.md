@@ -1,5 +1,11 @@
 ## 1.2.0
 
+- Added manual credit adding via `ack add`: [Read docs](/README.md#manually-adding-credits)
+- Added `--recursive` flag to include all dependencies's dependencies
+- Added more file types: CSV, HTML, TOML and YAML
+- Updated design a little
+- Added a proper [README.md](/README.md)
+
 ## 1.1.0
 
 - Added `version` prop to JSON output
