@@ -1,6 +1,6 @@
 {
   "name": "acknowledgements",
-  "description": "✨ Properly credit deps and assets in your projects in a pretty way.",
+  "description": "✨ Properly credit your project's dependencies and assets, in a pretty way.",
   "version": "1.2.0",
   "repository": {
     "type": "git",
@@ -14,14 +14,13 @@
     "meta",
     "package-managing"
   ],
-  "author": "Clembs <clembs@clembs.xyz>",
+  "author": "Clembs <clembs@clembs.com>",
   "license": "MIT",
   "scripts": {
     "ack": "node dist/index.js",
     "start": "yarn build && yarn credit",
     "build": "esbuild --outfile=dist/index.js --target=es2022 --format=cjs --platform=node --bundle src/index.ts",
-    "credit": "yarn ack --include-dev --formats=md csv html toml yml",
-    "postinstall": "yarn credit"
+    "credit": "yarn ack --include-dev --formats=md csv html toml yml"
   },
   "dependencies": {
     "prompts": "^2.4.2",
