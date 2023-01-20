@@ -1,3 +1,4 @@
+import { readdirSync, statSync } from 'fs';
 import { resolve } from 'path';
 import { color, read } from '../helpers';
 import { CreditJSON, CreditsMap, CreditTypes } from '../types';
@@ -9,7 +10,8 @@ import writeCreditsTOML from './toml';
 import writeCreditsYAML from './yaml';
 
 const depNames = new Set<string>();
-const allDeps: CreditsMap = new Map();
+const allCredits: CreditsMap = new Map();
+const packageJSONs: string[] = [];
 
 const writeFormat = {
   json: writeCreditsJSON,
@@ -41,27 +43,36 @@ export async function generate(
 ) {
   const time = Date.now();
 
+  recursiveFindPackageJSON(directory);
+
   const packageJSONpath = resolve(`${directory}/package.json`);
+
   const creditsJSONpath = resolve(`${directory}/credits.json`);
 
   console.log('🔎 Retrieving dependencies...');
 
   const credits: CreditJSON[] = JSON.parse(read(creditsJSONpath)) ?? [];
-  const pjson = JSON.parse(read(packageJSONpath));
+  const pjsons = packageJSONs.map((path) => JSON.parse(path));
 
   credits.forEach((credit) => {
     if (credit && credit.type === CreditTypes.ManualCredit) {
-      allDeps.set(credit.name, credit);
+      allCredits.set(credit.name, credit);
     }
   });
 
-  if (!pjson.dependencies) {
+  if (!pjsons || !pjsons.find((pjson) => pjson.dependencies)) {
     throw new Error('No dependencies found.');
   }
-  [
-    ...Object.keys(pjson.dependencies ?? {}),
-    ...(include.devDeps ? Object.keys(pjson.devDependencies ?? {}) : []),
-  ]
+
+  const allDeps: string[] = pjsons.reduce(
+    (acc, cur) => [...acc, ...Object.keys(cur.dependencies ?? {})],
+    []
+  );
+  const allDevDeps: string[] = include.devDeps
+    ? pjsons.reduce((acc, cur) => [...acc, ...Object.keys(cur.devDependencies ?? {})], [])
+    : [];
+
+  [...allDeps, ...allDevDeps]
     .filter(Boolean)
     .forEach((d) => addDependency(d, directory, recursive));
 
@@ -71,14 +82,14 @@ export async function generate(
 
     const path = resolve(`${directory}/credits.${format}`);
 
-    const allCredits = Array.from(allDeps.values()).sort((a, b) => a.name.localeCompare(b.name));
+    const credits = Array.from(allCredits.values()).sort((a, b) => a.name.localeCompare(b.name));
 
-    writeFormat[format](path, allCredits);
+    writeFormat[format](path, credits);
 
-    console.log(`📝 Wrote ${color('bold', 'underline')} to ${path}.`, `credits.${format}`);
+    console.log(`📝 Wrote ${color('bold', 'underline')} to ${path}`, `credits.${format}`);
   });
 
-  console.log(`✨ Credited ${allDeps.size} dependencies in ${Date.now() - time}ms.`);
+  console.log(`✨ Credited ${allCredits.size} dependencies in ${Date.now() - time}ms`);
 }
 
 /**
@@ -108,7 +119,7 @@ function addDependency(dep: string, directory: string, recursive: boolean = fals
       : pjson.repository.url.replace(/^git\+/, '').replace(/\.git$/, '')
     : `https://npmjs.com/package/${dep}`;
 
-  allDeps.set(dep, {
+  allCredits.set(dep, {
     name: dep,
     version,
     license: pjson.license || 'Unknown',
@@ -121,4 +132,27 @@ function addDependency(dep: string, directory: string, recursive: boolean = fals
   if (recursive && pjson.dependencies) {
     Object.keys(pjson.dependencies ?? {}).forEach((d) => addDependency(d, directory, true));
   }
+}
+
+function recursiveFindPackageJSON(directory: string) {
+  const files = readdirSync(directory);
+
+  const excludeFolders = ['node_modules', 'dist', '.git'];
+
+  files.forEach((file) => {
+    const filePath = resolve(`${directory}/${file}`);
+
+    if (excludeFolders.includes(file)) {
+      return;
+    }
+    if (file === 'package.json') {
+      packageJSONs.push(read(filePath));
+      return;
+    }
+    if (statSync(filePath).isDirectory()) {
+      recursiveFindPackageJSON(resolve(filePath));
+      return;
+    }
+    return;
+  });
 }
