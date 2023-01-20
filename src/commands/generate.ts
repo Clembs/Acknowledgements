@@ -11,7 +11,7 @@ import writeCreditsYAML from './yaml';
 
 const depNames = new Set<string>();
 const allCredits: CreditsMap = new Map();
-const packageJSONs: string[] = [];
+const packageJSONs: [string, any][] = [];
 
 const writeFormat = {
   json: writeCreditsJSON,
@@ -45,14 +45,11 @@ export async function generate(
 
   recursiveFindPackageJSON(directory);
 
-  const packageJSONpath = resolve(`${directory}/package.json`);
-
   const creditsJSONpath = resolve(`${directory}/credits.json`);
 
   console.log('🔎 Retrieving dependencies...');
 
   const credits: CreditJSON[] = JSON.parse(read(creditsJSONpath)) ?? [];
-  const pjsons = packageJSONs.map((path) => JSON.parse(path));
 
   credits.forEach((credit) => {
     if (credit && credit.type === CreditTypes.ManualCredit) {
@@ -60,21 +57,15 @@ export async function generate(
     }
   });
 
-  if (!pjsons || !pjsons.find((pjson) => pjson.dependencies)) {
+  if (!packageJSONs || !packageJSONs.find(([dir, pjson]) => pjson.dependencies)) {
     throw new Error('No dependencies found.');
   }
 
-  const allDeps: string[] = pjsons.reduce(
-    (acc, cur) => [...acc, ...Object.keys(cur.dependencies ?? {})],
-    []
-  );
-  const allDevDeps: string[] = include.devDeps
-    ? pjsons.reduce((acc, cur) => [...acc, ...Object.keys(cur.devDependencies ?? {})], [])
-    : [];
-
-  [...allDeps, ...allDevDeps]
-    .filter(Boolean)
-    .forEach((d) => addDependency(d, directory, recursive));
+  packageJSONs.forEach(([dir, pjson]) => {
+    [...Object.keys(pjson.dependencies ?? {}), ...Object.keys(pjson.devDependencies ?? {})]
+      .filter(Boolean)
+      .forEach((d) => addDependency(d, dir, recursive));
+  });
 
   Object.keys(formats).forEach((f) => {
     const format = f as keyof typeof formats;
@@ -146,7 +137,7 @@ function recursiveFindPackageJSON(directory: string) {
       return;
     }
     if (file === 'package.json') {
-      packageJSONs.push(read(filePath));
+      packageJSONs.push([directory, JSON.parse(read(filePath))]);
       return;
     }
     if (statSync(filePath).isDirectory()) {
